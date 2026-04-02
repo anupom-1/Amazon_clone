@@ -1,0 +1,18 @@
+#Virtual environment
+venv/
+
+#Python cache
+*.pyc
+__pycache__/
+
+#Django media/uploads
+media/
+
+#Environment variables 
+.venv
+
+#VS code settings 
+.VScode/
+
+#Logs 
+*.log 
