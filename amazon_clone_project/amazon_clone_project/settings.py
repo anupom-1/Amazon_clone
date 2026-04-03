@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'amazon_clone.apps.AmazonCloneAppConfig'
+    'amazon_clone_app.apps.AmazonCloneAppConfig'
 ]
 
 MIDDLEWARE = [
@@ -120,3 +120,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+AUTH_USER_MODEL = "amazon_clone_app.CustomUser"
+

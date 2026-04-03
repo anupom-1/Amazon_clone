@@ -1,7 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import  AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.conf import settings
 
-
+# CustomManager
 class CustomManager(BaseUserManager):
 
     def _create_user(self, email = None, password = None, **extra_fields):
@@ -31,7 +32,9 @@ class CustomManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
     
 
-class CustomUser(AbstractUser):
+# CustomUser
+class CustomUser(AbstractBaseUser, PermissionsMixin):
+
     class AccountChoices(models.TextChoices):
         Seller = "S", "Seller"
         Buyer = "B", "Buyer"
@@ -56,4 +59,43 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return f"{self.first_name} {self.last_name} and email: {self.email}"
 
-    
+# Profile
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="sellerprofile")
+    bio = models.TextField()
+    profile_picture = models.ImageField(upload_to="profile_pics/", blank=True, null=True)
+
+
+# ProductCategory
+class ProductCategory(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+
+# Product
+class Product(models.Model):
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=9, decimal_places=2)
+    description = models.TextField()
+    category = models.ManyToManyField(ProductCategory, related_name="products")
+    quantity = models.IntegerField()
+
+# Rating 
+class Rating(models.Model):
+    RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True, related_name="ratings")
+    seller = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True, related_name="ratings")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  # who gave the rating
+    rating = models.IntegerField(choices=RATING_CHOICES)
+    review = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+# Post
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="posts")
+    description = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+# User_session
+
