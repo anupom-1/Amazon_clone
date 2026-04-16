@@ -61,4 +61,25 @@ class LogOutView(View):
         logout(request)
         return redirect("login")
 
+# ProfileView
+class ProfileView(LoginRequiredMixin,UpdateView):
+    model = models.Profile
+    fields = ["bio", "profile_picture"]
+    success_url = "/profile/"
+    template_name = "amazon_clone_app/profile.html"
+    context_object_name = "profile"
+
+    def get_object(self):
+        return self.request.user.sellerprofile
+
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = models.Post
+    fields = ["title", "picture", "description"]
+    template_name = "amazon_clone_app/post_create.html"
+    success_url = "/profile/"
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user.sellerprofile
+        return super().form_valid(form)
 

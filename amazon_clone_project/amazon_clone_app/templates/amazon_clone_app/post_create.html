@@ -1,0 +1,28 @@
+{% extends "amazon_clone_app/base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card p-4">
+
+        <h3>Create Post</h3>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <input type="text" name="title" class="form-control mb-2" placeholder="Title">
+
+            <input type="file" name="picture" class="form-control mb-2">
+
+            <textarea name="description" class="form-control mb-2"></textarea>
+
+            <button class="btn btn-primary">Post</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

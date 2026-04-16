@@ -1,0 +1,73 @@
+{% extends "amazon_clone_app/base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- PROFILE -->
+    <div class="card p-4 text-center">
+
+        {% if object.profile_picture %}
+            <img src="{{ object.profile_picture.url }}"
+                width="160" height="160"
+                class="rounded-circle mb-3">
+        {% endif %}
+
+        <h3>{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+
+        <p>{{ object.bio }}</p>
+
+        <button class="btn btn-primary"
+                onclick="document.getElementById('editForm').style.display='block'">
+            Edit Profile
+        </button>
+
+        <a href="{% url 'post' %}" class="btn btn-success mt-2">
+            Create Post
+        </a>
+
+    </div>
+
+    <!-- EDIT PROFILE -->
+    <div id="editForm" style="display:none;" class="card p-4 mt-3">
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <textarea name="bio" class="form-control">{{ object.bio }}</textarea>
+
+            <input type="file" name="profile_picture" class="form-control mt-2">
+
+            <button class="btn btn-success mt-2">Save</button>
+        </form>
+
+    </div>
+
+    <!-- POSTS FEED -->
+    <div class="mt-4">
+
+        <h4>Posts</h4>
+
+        {% for post in request.user.sellerprofile.posts.all %}
+
+            <div class="card p-3 mb-3">
+
+                <h5>{{ post.title }}</h5>
+
+                {% if post.picture %}
+                    <img src="{{ post.picture.url }}" width="150" height="150">
+                {% endif %}
+
+                <p>{{ post.description }}</p>
+                <p>{{ post.date }}</p>
+            </div>
+
+        {% empty %}
+            <p>No posts yet</p>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
